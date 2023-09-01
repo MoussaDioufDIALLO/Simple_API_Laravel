@@ -18,17 +18,42 @@ class MemberController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        // Validate the request data
+        $this->validate($request, [
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'address' => 'required|email',
+        ]);
+    
+        // Create a new member
+        $member = new Member();
+        $member->name = $request->name;
+        $member->email = $request->email;
+        $member->address = $request->address;
+    
+        // Save the member to the database
+        $member->save();
+    
+        // Return the member
+        return $member;
     }
-
-    /**
-     * Store a newly created resource in storage.
-     */
+    
     public function store(Request $request)
     {
-        //
+        // Crée un nouvel objet membre à partir des données de la requête
+        $member = new Member();
+        $member->name = $request->name;
+        $member->email = $request->email;
+        $member->address = $request->address;
+
+        $result = $member ->save();
+        if($result)
+        {
+          return ["result"=>"data has been added"];
+        }
+        return ["result"=>"Record fail"];
     }
 
     /**
@@ -52,9 +77,18 @@ class MemberController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $device = Member::find($id);
+        $device->name = $request->name;
+        $device->email = $request->email;
+        $device->address = $request->address;
+        $result = $device->save();
+        if ($result) {
+            return ["result" => "data has been updated"];
+        }
+        return ["result" => "operation failed"];
     }
-
+    
+    
     /**
      * Remove the specified resource from storage.
      */
